@@ -1,6 +1,8 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformDependencyConfiguration
 
 plugins {
     id("java") // Java support
@@ -105,8 +107,8 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            ide("IC-2023.3")   // oldest supported
-            ide("IC-2025.2")   // newest supported
+            create(IntelliJPlatformType.IntellijIdeaCommunity, "2023.3")
+            create(IntelliJPlatformType.IntellijIdeaCommunity, "2025.2")
         }
     }
 }
