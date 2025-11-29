@@ -105,7 +105,8 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            recommended()
+            ide("IC-2023.3")   // oldest supported
+            ide("IC-2025.2")   // newest supported
         }
     }
 }
