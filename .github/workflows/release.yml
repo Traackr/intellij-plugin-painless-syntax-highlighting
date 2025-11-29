@@ -1,6 +1,6 @@
 # GitHub Actions Workflow for publishing the plugin to JetBrains Marketplace.
-# Running the publishPlugin task requires all the following secrets to be provided: PUBLISH_TOKEN, PRIVATE_KEY, PRIVATE_KEY_PASSWORD, CERTIFICATE_CHAIN.
-# See https://plugins.jetbrains.com/docs/intellij/plugin-signing.html for more information.
+# Requires secrets: PUBLISH_TOKEN, PRIVATE_KEY, PRIVATE_KEY_PASSWORD, CERTIFICATE_CHAIN.
+# See https://plugins.jetbrains.com/docs/intellij/plugin-signing.html
 
 name: Release
 on:
@@ -16,6 +16,8 @@ jobs:
   release:
     name: Publish Plugin
     runs-on: ubuntu-latest
+    container:
+      image: gradle:9.2.1-jdk25
     permissions:
       contents: write
     steps:
@@ -24,19 +26,10 @@ jobs:
         with:
           ref: ${{ inputs.tag }}
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: zulu
-          java-version: 21
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-
       - name: Publish Plugin
         env:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
           CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
-        run: ./gradlew publishPlugin
+        run: gradle publishPlugin
