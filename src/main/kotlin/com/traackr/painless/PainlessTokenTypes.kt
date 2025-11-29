@@ -39,12 +39,7 @@ object PainlessTokenTypes {
     // Identifiers
     @JvmField val IDENTIFIER = PainlessTokenType("IDENTIFIER")
 
-    // Token sets for syntax highlighting
+    // Token sets for parser definition
     @JvmField val COMMENTS = TokenSet.create(LINE_COMMENT, BLOCK_COMMENT)
     @JvmField val STRINGS = TokenSet.create(STRING)
-    @JvmField val KEYWORDS = TokenSet.create(KEYWORD)
-    @JvmField val NUMBERS = TokenSet.create(NUMBER)
-    @JvmField val BRACES = TokenSet.create(LBRACE, RBRACE)
-    @JvmField val BRACKETS = TokenSet.create(LBRACKET, RBRACKET)
-    @JvmField val PARENTHESES = TokenSet.create(LPAREN, RPAREN)
 }
