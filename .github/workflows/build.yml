@@ -101,6 +101,7 @@ jobs:
 
   inspectCode:
     name: Inspect code
+    if: github.event_name == 'pull_request'
     needs: [ build ]
     runs-on: ubuntu-latest
     permissions:
@@ -123,7 +124,7 @@ jobs:
   releaseDraft:
     name: Release draft
     if: github.event_name != 'pull_request'
-    needs: [ build, test, verify, inspectCode ]
+    needs: [ build, test, verify ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
