@@ -1,0 +1,10 @@
+.DS_Store
+.gradle
+.idea
+.intellijPlatform
+.kotlin
+.qodana
+build
+
+# Generated sources from JFlex
+src/main/gen/

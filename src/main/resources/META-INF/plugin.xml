@@ -1,0 +1,38 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.traackr.painless</id>
+    <name>Painless Language Support</name>
+    <vendor email="support@traackr.com" url="https://www.traackr.com">Traackr</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- File type registration -->
+        <fileType
+                name="Painless"
+                implementationClass="com.traackr.painless.PainlessFileType"
+                fieldName="INSTANCE"
+                language="Painless"
+                extensions="painless"/>
+
+        <!-- Language registration -->
+        <lang.parserDefinition
+                language="Painless"
+                implementationClass="com.traackr.painless.PainlessParserDefinition"/>
+
+        <!-- Syntax highlighting -->
+        <lang.syntaxHighlighterFactory
+                language="Painless"
+                implementationClass="com.traackr.painless.PainlessSyntaxHighlighterFactory"/>
+
+        <!-- Brace matching -->
+        <lang.braceMatcher
+                language="Painless"
+                implementationClass="com.traackr.painless.PainlessBraceMatcher"/>
+
+        <!-- Commenter for toggling comments -->
+        <lang.commenter
+                language="Painless"
+                implementationClass="com.traackr.painless.PainlessCommenter"/>
+    </extensions>
+</idea-plugin>
