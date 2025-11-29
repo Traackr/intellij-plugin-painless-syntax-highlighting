@@ -77,6 +77,12 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
+      - name: Free Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+
       - name: Fetch Sources
         uses: actions/checkout@v5
 
