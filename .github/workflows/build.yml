@@ -15,14 +15,21 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    container:
-      image: gradle:9.2.1-jdk25
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v5
 
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
       - name: Build plugin
-        run: gradle buildPlugin
+        run: ./gradlew buildPlugin
 
       - name: Prepare Plugin Artifact
         id: artifact
@@ -42,14 +49,21 @@ jobs:
     name: Test
     needs: [ build ]
     runs-on: ubuntu-latest
-    container:
-      image: gradle:9.2.1-jdk25
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v5
 
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
       - name: Run Tests
-        run: gradle check
+        run: ./gradlew check
 
       - name: Collect Tests Result
         if: ${{ failure() }}
@@ -62,14 +76,21 @@ jobs:
     name: Verify plugin
     needs: [ build ]
     runs-on: ubuntu-latest
-    container:
-      image: gradle:9.2.1-jdk25
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v5
 
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
       - name: Run Plugin Verification tasks
-        run: gradle verifyPlugin
+        run: ./gradlew verifyPlugin
 
       - name: Collect Plugin Verifier Result
         if: ${{ always() }}
@@ -103,13 +124,20 @@ jobs:
     if: github.event_name != 'pull_request'
     needs: [ build, test, verify, inspectCode ]
     runs-on: ubuntu-latest
-    container:
-      image: gradle:9.2.1-jdk25
     permissions:
       contents: write
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v5
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Remove Old Release Drafts
         env:
@@ -123,9 +151,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=$(gradle properties --property version --quiet --console=plain | tail -n 1 | cut -f2- -d ' ')
+          VERSION=$(./gradlew properties --property version --quiet --console=plain | tail -n 1 | cut -f2- -d ' ')
           RELEASE_NOTE="./build/tmp/release_note.txt"
-          gradle getChangelog --unreleased --no-header --quiet --console=plain --output-file=$RELEASE_NOTE
+          ./gradlew getChangelog --unreleased --no-header --quiet --console=plain --output-file=$RELEASE_NOTE
 
           gh release create $VERSION \
             --draft \
