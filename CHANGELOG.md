@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-11-29
+
+### Added
+
+- Plugin icon for Marketplace and Settings display
+
+### Changed
+
+- Renamed plugin to "Painless Language Syntax Highlighting"
+- Consolidated SVG icons (single scalable file per theme)
+- Release drafts now include plugin zip as download asset
+
 ## [1.0.0] - 2025-11-29
 
 ### Added
