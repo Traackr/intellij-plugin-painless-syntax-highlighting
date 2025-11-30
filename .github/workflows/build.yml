@@ -155,6 +155,9 @@ jobs:
             --jq '.[] | select(.draft == true) | .id' \
             | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
 
+      - name: Build Plugin
+        run: ./gradlew buildPlugin
+
       - name: Create Release Draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -166,4 +169,5 @@ jobs:
           gh release create $VERSION \
             --draft \
             --title $VERSION \
-            --notes-file $RELEASE_NOTE
+            --notes-file $RELEASE_NOTE \
+            ./build/distributions/*.zip
