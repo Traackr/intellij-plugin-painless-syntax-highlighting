@@ -1,10 +1,10 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# Painless Language Support Changelog
+# Painless Language Syntax Highlighting Changelog
 
 ## [Unreleased]
 
-## [1.0.0]
+## [1.0.0] - 2025-11-29
 
 ### Added
 
