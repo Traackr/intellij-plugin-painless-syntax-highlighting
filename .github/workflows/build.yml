@@ -45,6 +45,12 @@ jobs:
           name: ${{ steps.artifact.outputs.filename }}
           path: ./build/distributions/content/*/*
 
+      - name: Upload plugin zip
+        uses: actions/upload-artifact@v5
+        with:
+          name: plugin-zip
+          path: ./build/distributions/*.zip
+
   test:
     name: Test
     needs: [ build ]
@@ -155,8 +161,11 @@ jobs:
             --jq '.[] | select(.draft == true) | .id' \
             | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
 
-      - name: Build Plugin
-        run: ./gradlew buildPlugin
+      - name: Download Plugin Zip
+        uses: actions/download-artifact@v5
+        with:
+          name: plugin-zip
+          path: ./build/distributions
 
       - name: Create Release Draft
         env:
