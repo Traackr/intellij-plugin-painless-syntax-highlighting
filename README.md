@@ -2,7 +2,7 @@
 
 | Light | Dark |
 |:-----:|:----:|
-| <img src="src/main/resources/icons/painless-logo.svg" width="64" height="64"> | <img src="src/main/resources/icons/painless-logo-dark.svg" width="64" height="64"> |
+| <img src="src/main/resources/icons/painless.svg" width="64" height="64"> | <img src="src/main/resources/icons/painless_dark.svg" width="64" height="64"> |
 
 [![Build](https://github.com/Traackr/intellij-plugin-painless-syntax-highlighting/workflows/Build/badge.svg)](https://github.com/Traackr/intellij-plugin-painless-syntax-highlighting/actions)
 [![Version](https://img.shields.io/jetbrains/plugin/v/com.traackr.painless.svg)](https://plugins.jetbrains.com/plugin/com.traackr.painless)
