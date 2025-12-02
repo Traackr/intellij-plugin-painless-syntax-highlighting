@@ -162,7 +162,7 @@ jobs:
             | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
 
       - name: Download Plugin Zip
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: plugin-zip
           path: ./build/distributions
