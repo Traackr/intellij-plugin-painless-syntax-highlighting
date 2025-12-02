@@ -1,0 +1,72 @@
+# GitHub Actions Workflow for updating changelog via comment command.
+# Type "/changelog" in a PR comment to add the PR title to CHANGELOG.md
+
+name: Update Changelog
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  update-changelog:
+    name: Update Changelog
+    if: |
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/changelog')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Get PR details
+        id: pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_DATA=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.issue.number }})
+          echo "title=$(echo "$PR_DATA" | jq -r '.title')" >> $GITHUB_OUTPUT
+          echo "head_ref=$(echo "$PR_DATA" | jq -r '.head.ref')" >> $GITHUB_OUTPUT
+          echo "number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.pr.outputs.head_ref }}
+          fetch-depth: 0
+
+      - name: Update CHANGELOG.md
+        run: |
+          PR_TITLE="${{ steps.pr.outputs.title }}"
+          PR_NUMBER="${{ steps.pr.outputs.number }}"
+          ENTRY="- ${PR_TITLE} (#${PR_NUMBER})"
+
+          # Check if entry already exists
+          if grep -qF "#${PR_NUMBER})" CHANGELOG.md; then
+            echo "Changelog entry for PR #${PR_NUMBER} already exists, skipping."
+            echo "SKIPPED=true" >> $GITHUB_ENV
+          else
+            # Insert after "## [Unreleased]" line
+            sed -i "/## \[Unreleased\]/a\\${ENTRY}" CHANGELOG.md
+            echo "SKIPPED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and push changes
+        if: env.SKIPPED == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "Add changelog entry for PR #${{ steps.pr.outputs.number }}"
+          git push
+
+      - name: Add reaction to comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "$SKIPPED" == "true" ]; then
+            REACTION="-1"
+          else
+            REACTION="+1"
+          fi
+          gh api repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions \
+            -f content="$REACTION"
